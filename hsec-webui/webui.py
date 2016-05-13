@@ -1,6 +1,7 @@
 # http://electronicsbyexamples.blogspot.com/2014/02/raspberry-pi-control-from-mobile-device.html
 
 from flask import Flask, render_template, request, jsonify
+import comms.comms as comms # encapsulates communication technology
 
 app = Flask(__name__)
 
@@ -37,6 +38,13 @@ def GetUptime():
     # return only uptime info
     uptime = output[output.find("up"):output.find("user")-5]
     return uptime
+
+def SendCommand():
+    comm_channel = comms.PubChannel("tcp://*:5563")
+    time.sleep(1) # zmq slow joiner syndrome, should sync instead
+    channel = "control_events"
+    comm_channel.send(channel, "arm")
+    comm_channel.close()
     
 # run the webserver on standard port 80, requires sudo
 if __name__ == "__main__":
