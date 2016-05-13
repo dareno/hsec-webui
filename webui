@@ -1,0 +1,44 @@
+# http://electronicsbyexamples.blogspot.com/2014/02/raspberry-pi-control-from-mobile-device.html
+
+from flask import Flask, render_template, request, jsonify
+
+app = Flask(__name__)
+
+# return index page when IP address of RPi is typed in the browser
+@app.route("/")
+def Index():
+    return render_template("index.html", uptime=GetUptime())
+
+# ajax GET call this function to set led state
+# depeding on the GET parameter sent
+@app.route("/_led")
+def _led():
+    state = request.args.get('state')
+    if state=="armed":
+        pass
+    else:
+        pass
+    return ""
+
+# ajax GET call this function periodically to read button state
+# the state is sent back as json data
+@app.route("/_button")
+def _button():
+    if True:
+        state = "pressed"
+    else:
+        state = "not pressed"
+    return jsonify(buttonState=state)
+
+def GetUptime():
+    # get uptime from the linux terminal command
+    from subprocess import check_output
+    output = check_output(["uptime"]).decode('utf-8')
+    # return only uptime info
+    uptime = output[output.find("up"):output.find("user")-5]
+    return uptime
+    
+# run the webserver on standard port 80, requires sudo
+if __name__ == "__main__":
+    
+    app.run(host='0.0.0.0',debug=True)
