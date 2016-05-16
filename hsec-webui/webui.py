@@ -1,3 +1,7 @@
+#!/usr/bin/env python3.4
+
+# vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
+
 # http://electronicsbyexamples.blogspot.com/2014/02/raspberry-pi-control-from-mobile-device.html
 
 from flask import Flask, render_template, request, jsonify
