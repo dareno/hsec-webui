@@ -6,6 +6,7 @@
 
 from flask import Flask, render_template, request, jsonify
 import comms.comms as comms # encapsulates communication technology
+from time import sleep
 
 app = Flask(__name__)
 
@@ -20,8 +21,12 @@ def Index():
 def _led():
     state = request.args.get('state')
     if state=="armed":
+        print("SendCommand(all zones, arm)")
+        SendCommand("all zones", "arm")
         pass
     else:
+        print("SendCommand(all zones, disarm)")
+        SendCommand("all zones", "disarm")
         pass
     return ""
 
@@ -43,11 +48,14 @@ def GetUptime():
     uptime = output[output.find("up"):output.find("user")-5]
     return uptime
 
-def SendCommand():
+def SendCommand(zone,armed):
     comm_channel = comms.PubChannel("tcp://*:5563")
-    time.sleep(1) # zmq slow joiner syndrome, should sync instead
+    sleep(1) # zmq slow joiner syndrome, should sync instead
     channel = "control_events"
-    comm_channel.send(channel, "arm")
+    if armed=="arm":
+        comm_channel.send(channel, [[zone,"arm"]])
+    else:
+        comm_channel.send(channel, [[zone,"disarm"]])
     comm_channel.close()
     
 # run the webserver on standard port 80, requires sudo
