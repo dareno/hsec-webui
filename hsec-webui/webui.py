@@ -7,11 +7,28 @@
 from flask import Flask, render_template, request, jsonify
 import comms.comms as comms # encapsulates communication technology
 from time import sleep
+import ssl # for hand-crafted ssl context enabling TLS?
+from flask_httpauth import HTTPBasicAuth
+
+users = {
+    "david":"pascal",
+    "susan":"photo"
+}
 
 app = Flask(__name__)
+auth = HTTPBasicAuth()
+
+@auth.get_password
+def get_pw(username):
+    if username in users:
+        return users.get(username)
+    return None
+
+
 
 # return index page when IP address of RPi is typed in the browser
 @app.route("/")
+@auth.login_required
 def Index():
     return render_template("index.html", uptime=GetUptime())
 
@@ -61,4 +78,9 @@ def SendCommand(zone,armed):
 # run the webserver on standard port 80, requires sudo
 if __name__ == "__main__":
     
-    app.run(host='0.0.0.0',debug=True)
+    #context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+    #context.load_cert_chain( 'ssl.cert', 'ssl.key')
+    context = ( 'ssl.cert', 'ssl.key')
+    #app.run(host='0.0.0.0', ssl_context=context, threaded=True, debug=True)
+    app.run(host='0.0.0.0', ssl_context=context, debug=True)
+    #app.run(host='0.0.0.0',debug=True)
