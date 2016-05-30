@@ -11,8 +11,8 @@ import ssl # for hand-crafted ssl context enabling TLS?
 from flask_httpauth import HTTPBasicAuth
 
 users = {
-    "david":"pascal",
-    "susan":"photo"
+    "david":"secret",
+    "susan":"secret"
 }
 
 app = Flask(__name__)
