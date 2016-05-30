@@ -80,7 +80,7 @@ if __name__ == "__main__":
     
     #context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
     #context.load_cert_chain( 'ssl.cert', 'ssl.key')
-    context = ( 'ssl.cert', 'ssl.key')
+    context = ( 'hsec.crt', 'hsec.key')
     #app.run(host='0.0.0.0', ssl_context=context, threaded=True, debug=True)
     app.run(host='0.0.0.0', ssl_context=context, debug=True)
     #app.run(host='0.0.0.0',debug=True)

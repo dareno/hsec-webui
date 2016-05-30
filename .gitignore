@@ -2,4 +2,6 @@ __pycache__
 *.log
 hsec-webui/comms
 hsec-webui/comms/*
-hsec-webui/ssl.*
+hsec-webui/hsec.crt
+hsec-webui/hsec.csr
+hsec-webui/hsec.key
