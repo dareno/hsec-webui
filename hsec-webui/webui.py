@@ -30,20 +30,23 @@ def get_pw(username):
 @app.route("/")
 @auth.login_required
 def Index():
-    return render_template("index.html", uptime=GetUptime())
+    zones={"Upper Windows":"armed","Lower Windows":"armed","Doors":"armed","Inside Motion":"unarmed"}
+    return render_template("index.html", uptime=GetUptime(), zones=zones)
 
 # ajax GET call this function to set led state
 # depeding on the GET parameter sent
 @app.route("/_led")
 def _led():
+    zone = request.args.get('zone')
     state = request.args.get('state')
-    if state=="armed":
-        print("SendCommand(all zones, arm)")
-        SendCommand("all zones", "arm")
+    print("request %s:%s" % (zone,state))
+    if state=="on":
+        print("SendCommand(%s, arm)" % zone)
+        SendCommand(zone, "arm")
         pass
     else:
-        print("SendCommand(all zones, disarm)")
-        SendCommand("all zones", "disarm")
+        print("SendCommand(%s, disarm)" % zone)
+        SendCommand(zone, "disarm")
         pass
     return ""
 

@@ -1,65 +1,53 @@
-<!doctype html>
+<!DOCTYPE html>
+<html>
 <head>
 <meta name="viewport" content="initial-scale=1, maximum-scale=1">
 <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.css" />
 <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
 <script src="https://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.js"></script>
-</head>
 
-<style>
-h3, h4 {text-align: center;}
-span {font-weight: bold;}
-</style>
+<script>
 
-<script type=text/javascript>
-    $(
-    // When the LED button is pressed (change)
-    // do an ajax request to server to change LED state
-    function() 
-    {
-        $('#flip-1').change(function() 
-        {
-        $.getJSON('/_led', {state: $('#flip-1').val()});
-        });     
-    }
-    );
-
-    $(
-    // periodically (500ms) do an ajax request to get the button state
-    // modify the span tag to reflect the state (pressed or not)
-    // the state text comes from the JSON string returned by the server
-    function button() 
-    {
-        $.getJSON('/_button', function(data)
-            {
-                $("#buttonState").text(data.buttonState);
-                setTimeout(function(){button();},500);
-            });
-    }
-    );
-    
-
+$(document).ready(function(){
+	$("select").change(function() {
+	  $.getJSON('/_led', {
+            zone:       $(this).attr('id'),
+	    state:      $(this).val()
+	  });
+	  $("#output").text(
+	    "[" + $(this).attr('id') + ":" + $(this).val() + "]"
+	  );
+	});
+});
 </script>
-<!-- Simple JQuery Mobile page that display the button state on the breadoard -->
-<!-- You can also change the LED state with the slider switch -->
-<!-- The Raspberry Pi uptime is displayed in the footer (Jinja2 expands the template tag) -->
 
-<div data-role="page" data-theme="b">
-  <div data-role="header">
-    <div><h3>Raspberry Pi Web Control</h3></div>
-  </div>
+</head>
+</body>
 
-  <div data-role="content">
+    <div><h3 class="test">Raspberry Pi Web Control</h3></div>
+    <p id="output">Output</p>
+
     <form>
     <p>The button is <span id="buttonState"></span></p>
     <br>
-    <select name="flip-1" id="flip-1" data-role="slider" style="float: left;">
-        <option value="disarmed">disarmed</option>
-        <option value="armed">armed</option>
+
+    {% for zone in zones %}
+    <select name="{{zone}}" id="{{zone}}" data-role="slider" style="float: left;">
+        <option value="off">off</option>
+	<option value="on">on</option>
     </select>
+    <p> {{zone}}</p>
+    {% endfor %}
+
     </form>
-  </div>
+
+
+    <br>
+
  <div data-role="footer">
     <div><h4>This Raspberry Pi has been {{uptime}}</h4></div>
   </div>
-</div>
+
+
+</body>
+</html>
