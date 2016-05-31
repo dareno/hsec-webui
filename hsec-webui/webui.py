@@ -35,8 +35,8 @@ def Index():
 
 # ajax GET call this function to set led state
 # depeding on the GET parameter sent
-@app.route("/_led")
-def _led():
+@app.route("/arm")
+def arm():
     zone = request.args.get('zone')
     state = request.args.get('state')
     print("request %s:%s" % (zone,state))

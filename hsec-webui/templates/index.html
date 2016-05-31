@@ -1,19 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="initial-scale=1, maximum-scale=1">
-<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.css" />
-<script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
-<script src="https://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.js"></script>
+	<!-- jquery mobile headers -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 
 <script>
 
-$(document).ready(function(){
-	$("select").change(function() {
-	  $.getJSON('/_led', {
+$(document).ready(function(){  // load after the document fully loads
+
+	$("select").change(function() { // run when sliders change
+	  $.getJSON('/arm', {
+            // AJAX call to arm/disarm a zone
             zone:       $(this).attr('id'),
 	    state:      $(this).val()
 	  });
+
+	  // some output on the page for troubleshooting
 	  $("#output").text(
 	    "[" + $(this).attr('id') + ":" + $(this).val() + "]"
 	  );
@@ -22,32 +27,42 @@ $(document).ready(function(){
 </script>
 
 </head>
-</body>
+<body>
 
-    <div><h3 class="test">Raspberry Pi Web Control</h3></div>
-    <p id="output">Output</p>
 
+<div data-role="page" data-theme="a">
+  <div data-role="header">
+    <h1>Security Control</h1>
+  </div>
+
+
+
+  <div data-role="main" class="ui-content">
     <form>
-    <p>The button is <span id="buttonState"></span></p>
-    <br>
-
-    {% for zone in zones %}
-    <select name="{{zone}}" id="{{zone}}" data-role="slider" style="float: left;">
+    <!--p>The button is <span id="buttonState"></span></p-->
+    <!--div class="ui-field-contain"-->
+    {% for zone in zones %} <!-- one slider per alarm zone -->
+    <div data-role="fieldcontain">  <!-- separate the zones a little -->
+    <!--label   for="{{zone}}" style="text-align: right;">{{zone}}</label-->
+    <!--label   for="{{zone}}" style="display: block; width:200; ">{{zone}}</label-->
+    <label   for="{{zone}}" style="width=;">{{zone}}</label>
+    <select name="{{zone}}" id="{{zone}}" data-role="flipswitch" style="display: inline-block; " >
         <option value="off">off</option>
 	<option value="on">on</option>
     </select>
-    <p> {{zone}}</p>
+    </div>
     {% endfor %}
-
+    <!--/div--> <!-- end ui-field-contain -->
     </form>
 
 
-    <br>
+    <p id="output">[]</p>
 
- <div data-role="footer">
-    <div><h4>This Raspberry Pi has been {{uptime}}</h4></div>
-  </div>
-
+  </div> <!-- end main -->
+  <div data-role="footer">
+    <h4>{{uptime}}</h4>
+  </div> <!-- end footer -->
+</div>   <!-- end page -->
 
 </body>
 </html>
