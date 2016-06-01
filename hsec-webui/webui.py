@@ -30,8 +30,8 @@ def get_pw(username):
 @app.route("/")
 @auth.login_required
 def Index():
-    zones={"Upper Windows":"armed","Lower Windows":"armed","Doors":"armed","Inside Motion":"unarmed"}
-    return render_template("index.html", uptime=GetUptime(), zones=zones)
+    zones={"Upper Windows":"disarmed","Lower Windows":"armed","Doors":"disarmed","Inside Motion":"unarmed"}
+    return render_template("index.html", uptime=GetUptime(), zones=zones )
 
 # ajax GET call this function to set led state
 # depeding on the GET parameter sent
@@ -42,11 +42,11 @@ def arm():
     print("request %s:%s" % (zone,state))
     if state=="on":
         print("SendCommand(%s, arm)" % zone)
-        SendCommand(zone, "arm")
+        SendCommand([zone, "arm"])
         pass
     else:
         print("SendCommand(%s, disarm)" % zone)
-        SendCommand(zone, "disarm")
+        SendCommand([zone, "disarm"])
         pass
     return ""
 
@@ -68,15 +68,17 @@ def GetUptime():
     uptime = output[output.find("up"):output.find("user")-5]
     return uptime
 
-def SendCommand(zone,armed):
+def SendCommand(command):
     comm_channel = comms.PubChannel("tcp://*:5563")
     sleep(1) # zmq slow joiner syndrome, should sync instead
-    channel = "control_events"
-    if armed=="arm":
-        comm_channel.send(channel, [[zone,"arm"]])
-    else:
-        comm_channel.send(channel, [[zone,"disarm"]])
+    comm_channel.send("control_events", [command])
     comm_channel.close()
+
+def GetStatus():
+    # create object for communication to sensor system
+    # state_comms = comms.SubChannel("tcp://state1:5564", ['sensor_events','control_events', 'state'])
+    # state_comms.close()
+    pass
     
 # run the webserver on standard port 80, requires sudo
 if __name__ == "__main__":

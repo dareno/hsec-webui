@@ -45,10 +45,10 @@ $(document).ready(function(){  // load after the document fully loads
     <div data-role="fieldcontain">  <!-- separate the zones a little -->
     <!--label   for="{{zone}}" style="text-align: right;">{{zone}}</label-->
     <!--label   for="{{zone}}" style="display: block; width:200; ">{{zone}}</label-->
-    <label   for="{{zone}}" style="width=;">{{zone}}</label>
+    <label   for="{{zone}}" style="width=;">{{zone}} {{zones[zone]}}</label>
     <select name="{{zone}}" id="{{zone}}" data-role="flipswitch" style="display: inline-block; " >
-        <option value="off">off</option>
-	<option value="on">on</option>
+	    <option value="off" {%if zones[zone] == 'disarmed'%} selected="selected" {%endif%} >off</option>
+	    <option value="on" {%if zones[zone] == 'armed'%} selected="selected" {%endif%} >on</option>
     </select>
     </div>
     {% endfor %}
