@@ -5,3 +5,5 @@ hsec-webui/comms/*
 hsec-webui/hsec.crt
 hsec-webui/hsec.csr
 hsec-webui/hsec.key
+hsec-webui/a
+hsec-webui/geventapp
